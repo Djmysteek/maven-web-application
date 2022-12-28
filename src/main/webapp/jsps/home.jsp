@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1 align="center">Welcome to Mysteek Web app.</h1>
-<h1 align="center">We all specialise in all kinds of gadgets for the your daily use in your home.
+<h1 align="center">We all specialise in all kinds of gadgets for your daily use in your home.
 	           We are raising millionaires in IT automation.
 	We offer Training for DevOps with some Linux and Cloud equipping, salesforce and IT Engineers for best performance.</h1>
 <hr>
