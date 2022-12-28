@@ -5,8 +5,8 @@ node{
     }
     stage('2test&Build'){
       sh "${mavenHome}/bin/mvn clean package"
+      }
       /*
-    }
     stage('3CodeQuality'){
      sh   "${mavenHome}/bin/mvn clean sonar:sonar"
     }
