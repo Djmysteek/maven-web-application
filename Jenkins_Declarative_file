@@ -1,0 +1,63 @@
+pipeline{
+    agent any
+    tools {
+        maven "maven 3.8.6"
+    }
+    stages {
+        stage('1getcode'){
+        steps{
+            sh "echo 'cloning the latest application version'"
+            git credentialsId: 'github', url: 'https://github.com/Djmysteek/maven-web-application'
+        }
+    }
+    stage('3test+build'){
+        steps{
+            sh "echo 'rinning Junit test cases'"
+            sh "echo 'testing must pass to creat artifacts'"
+            sh "mvn sonar:sonar"
+        }
+    }
+    stage('4codequality'){
+    steps{
+        sh "echo 'rinning Junit test cases'"
+            sh "echo 'performing code quality analysis'"
+            sh "mvn clean package" 
+    }
+    }
+    stage('5uploadNexus'){
+        steps{
+        sh "echo deploying artifacts"
+            sh "mvn deploy"
+    }
+    }
+    stage('6Deploy2uat'){
+        steps{
+            sh "echo deploy to UAT"
+           deploy adapters: [tomcat9(credentialsId: 'b25949e4-60da-4a85-96a9-85d16de3e791', path: '', url: 'http://18.221.46.87:8083/')], contextPath: null, war: 'target/*war'
+        }    
+    }
+    stage('8deploy2prod'){
+        steps{
+            sh "echo 'deploy to production'"
+        deploy adapters: [tomcat9(credentialsId: 'b25949e4-60da-4a85-96a9-85d16de3e791', path: '', url: 'http://18.221.46.87:8083/')], contextPath: null, war: 'target/*war'    
+        }
+    }
+    }
+ post {
+     always{
+            emailext body: '''please check build status.
+
+mysteek entertainment''', subject: 'Deploy completed', to: 'datarihart@gmail.com'
+     }
+     success{
+        emailext body: '''package build successfully
+
+mysteek entertainment''', subject: 'Deploy Failed', to: 'datarihart@gmail.com' 
+     }
+      failure{
+            emailext body: '''package failed
+
+mysteek entertainment''', subject: 'Deploy Failed', to: 'datarihart@gmail.com'
+     }
+ }  
+}
